@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Front Page</title>
+        <script src="../js/react.min.js"></script>
+        <script src="../js/react-dom.min.js"></script>
+        <script src="../js/browser.min.js"></script>
+    </head>
+    <body>
+        <div id="example"></div>
+        <div id="secondExample"></div>
+        <div id="thirdExample"></div>
+
+        <script type="text/babel">
+
+            function MyComponent(props){
+                return <h1>Hello again!</h1>
+            }
+
+            function MySecondComponent(props){
+                return <div>
+                    <h3>Using {props.backend} for backend</h3>
+                    <h3>Using {props.frontend} for frontend</h3>
+                </div>
+
+            }
+
+            ReactDOM.render(
+                <h1>Hello World!</h1>,
+                document.getElementById('example')
+            );
+
+            ReactDOM.render(
+                <MyComponent />,
+                document.getElementById('secondExample')
+            );
+
+            ReactDOM.render(
+                <MySecondComponent backend="node" frontend="react" />,
+                document.getElementById('thirdExample')
+            );
+
+
+        </script>
+
+
+
+    </body>
+</html>
