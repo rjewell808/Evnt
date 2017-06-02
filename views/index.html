@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-
-<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
@@ -13,20 +11,135 @@
         <div id="example"></div>
         <div id="secondExample"></div>
         <div id="thirdExample"></div>
+        <div id="fourthExample"></div>
+
+        <div id="checkboxExample"></div>
 
         <script type="text/babel">
 
-            function MyComponent(props){
-                return <h1>Hello again!</h1>
-            }
+            var MyComponent = React.createClass({
+                render: function(){
+                    return <h1>Hello again!</h1>
+                }
+            });
 
-            function MySecondComponent(props){
-                return <div>
-                    <h3>Using {props.backend} for backend</h3>
-                    <h3>Using {props.frontend} for frontend</h3>
-                </div>
+            var MySecondComponent = React.createClass({
+                render: function(){
+                    return <div>
+                        <h3>Using {this.props.backend} for backend</h3>
+                        <h3>Using {this.props.frontend} for frontend</h3>
+                    </div>
+                }
+            });
 
-            }
+            var CommentComponent = React.createClass({
+                getInitialState: function(){
+                    return {editing: false};
+                },
+
+                edit: function(){
+                    this.setState({editing: true});
+                },
+
+                remove: function(){
+                    this.props.removeComment(this.props.index);
+                },
+
+                save: function(){
+                    this.setState({editing: false});
+                    this.props.updateComment(this.refs.newText.value, this.props.index);
+                },
+
+                renderNormal: function(){
+                    return <div>
+                        <div>{this.props.children}</div>
+                        <button onClick={this.edit}>Edit</button>
+                        <button onClick={this.remove}>Delete</button>
+                    </div>
+                },
+
+                renderForm: function(){
+                    return <div>
+                        <textarea ref="newText" defaultValue={this.props.children}></textarea>
+                        <button onClick={this.save}>Save</button>
+                    </div>
+                },
+
+                render: function(){
+                    if (this.state.editing){
+                        return this.renderForm();
+                    }
+                    return this.renderNormal();
+                }
+            });
+
+            var Board = React.createClass({
+                getInitialState: function(){
+                    return {
+                        comments: [
+                            'Note 1',
+                            'Note 2',
+                            'Note 3'
+                        ]
+                    }
+                },
+
+                addComment: function(defaultText){
+                    var arr = this.state.comments;
+                    arr.push(defaultText);
+                    this.setState({comments: arr});
+                },
+
+                updateComment: function(newText, i){
+                    var arr = this.state.comments;
+                    arr[i] = newText;
+                    this.setState({comments: arr});
+                },
+
+                removeComment: function(i){
+                    var arr = this.state.comments;
+                    arr.splice(i, 1);
+                    this.setState({comments: arr});
+                },
+
+                eachComment: function(text, i){
+                    return <CommentComponent key={i} index={i} updateComment={this.updateComment} removeComment={this.removeComment}>
+                        {text}
+                    </CommentComponent>
+                },
+
+                render: function(){
+                    return <div>
+                        <button onClick={this.addComment.bind(null, 'New Comment')}>Add new comment</button>
+                        <div className="board">
+                            {this.state.comments.map(this.eachComment)}
+                        </div>
+                    </div>
+                }
+            });
+
+            var CheckBox = React.createClass({
+                getInitialState: function(){
+                    return {checked: false}
+                },
+
+                handleCheck: function(){
+                    this.setState({checked: !this.state.checked});
+                },
+
+                render: function(){
+                    var message;
+                    if (this.state.checked){
+                        message = 'Checked';
+                    } else {
+                        message = 'Unchecked';
+                    }
+                    return <div>
+                        <input type="checkbox" defaultChecked={this.state.checked} onChange={this.handleCheck}/>
+                        <h3>Checkbox is {message}</h3>
+                    </div>
+                }
+            });
 
             ReactDOM.render(
                 <h1>Hello World!</h1>,
@@ -43,10 +156,15 @@
                 document.getElementById('thirdExample')
             );
 
+            ReactDOM.render(
+                <Board />,
+                document.getElementById('fourthExample')
+            );
 
+            ReactDOM.render(
+                <CheckBox />,
+                document.getElementById('checkboxExample')
+            );
         </script>
-
-
-
     </body>
 </html>
